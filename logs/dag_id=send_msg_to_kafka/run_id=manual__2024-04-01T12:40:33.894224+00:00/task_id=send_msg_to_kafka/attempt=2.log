@@ -1,0 +1,42 @@
+[2024-04-01T12:51:03.466+0000] {taskinstance.py:1979} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: send_msg_to_kafka.send_msg_to_kafka manual__2024-04-01T12:40:33.894224+00:00 [queued]>
+[2024-04-01T12:51:03.471+0000] {taskinstance.py:1979} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: send_msg_to_kafka.send_msg_to_kafka manual__2024-04-01T12:40:33.894224+00:00 [queued]>
+[2024-04-01T12:51:03.471+0000] {taskinstance.py:2193} INFO - Starting attempt 2 of 2
+[2024-04-01T12:51:03.476+0000] {taskinstance.py:2217} INFO - Executing <Task(PythonOperator): send_msg_to_kafka> on 2024-04-01 12:40:33.894224+00:00
+[2024-04-01T12:51:03.480+0000] {standard_task_runner.py:60} INFO - Started process 134 to run task
+[2024-04-01T12:51:03.483+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'send_msg_to_kafka', 'send_msg_to_kafka', 'manual__2024-04-01T12:40:33.894224+00:00', '--job-id', '39', '--raw', '--subdir', 'DAGS_FOLDER/test_send_kafka.py', '--cfg-path', '/tmp/tmpyciy671p']
+[2024-04-01T12:51:03.484+0000] {standard_task_runner.py:88} INFO - Job 39: Subtask send_msg_to_kafka
+[2024-04-01T12:51:03.513+0000] {task_command.py:423} INFO - Running <TaskInstance: send_msg_to_kafka.send_msg_to_kafka manual__2024-04-01T12:40:33.894224+00:00 [running]> on host ccbaf5d8412d
+[2024-04-01T12:51:03.551+0000] {taskinstance.py:2513} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='send_msg_to_kafka' AIRFLOW_CTX_TASK_ID='send_msg_to_kafka' AIRFLOW_CTX_EXECUTION_DATE='2024-04-01T12:40:33.894224+00:00' AIRFLOW_CTX_TRY_NUMBER='2' AIRFLOW_CTX_DAG_RUN_ID='manual__2024-04-01T12:40:33.894224+00:00'
+[2024-04-01T12:51:03.554+0000] {conn.py:380} INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv4 ('127.0.0.1', 9092)]>: connecting to localhost:9092 [('127.0.0.1', 9092) IPv4]
+[2024-04-01T12:51:03.554+0000] {conn.py:1206} INFO - Probing node bootstrap-0 broker version
+[2024-04-01T12:51:03.555+0000] {conn.py:418} ERROR - Connect attempt to <BrokerConnection node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv4 ('127.0.0.1', 9092)]> returned error 111. Disconnecting.
+[2024-04-01T12:51:03.555+0000] {conn.py:919} INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv4 ('127.0.0.1', 9092)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
+[2024-04-01T12:51:03.604+0000] {conn.py:380} INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv4 ('127.0.0.1', 9092)]>: connecting to localhost:9092 [('127.0.0.1', 9092) IPv4]
+[2024-04-01T12:51:03.604+0000] {conn.py:418} ERROR - Connect attempt to <BrokerConnection node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv4 ('127.0.0.1', 9092)]> returned error 111. Disconnecting.
+[2024-04-01T12:51:03.604+0000] {conn.py:919} INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv4 ('127.0.0.1', 9092)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
+[2024-04-01T12:51:03.654+0000] {conn.py:380} INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv6 ('::1', 9092, 0, 0)]>: connecting to localhost:9092 [('::1', 9092, 0, 0) IPv6]
+[2024-04-01T12:51:03.654+0000] {conn.py:418} ERROR - Connect attempt to <BrokerConnection node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv6 ('::1', 9092, 0, 0)]> returned error 99. Disconnecting.
+[2024-04-01T12:51:03.655+0000] {conn.py:919} INFO - <BrokerConnection node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv6 ('::1', 9092, 0, 0)]>: Closing connection. KafkaConnectionError: 99 EADDRNOTAVAIL
+[2024-04-01T12:51:03.655+0000] {taskinstance.py:2731} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 444, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 414, in _execute_callable
+    return execute_callable(context=context, **execute_callable_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 200, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 217, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+  File "/opt/airflow/dags/test_send_kafka.py", line 11, in send_msg_to_kafka
+    producer = KafkaProducer(bootstrap_servers=bootstrap_servers)
+  File "/home/airflow/.local/lib/python3.8/site-packages/kafka3/producer/kafka.py", line 383, in __init__
+    client = self.config['kafka_client'](
+  File "/home/airflow/.local/lib/python3.8/site-packages/kafka3/client_async.py", line 244, in __init__
+    self.config['api_version'] = self.check_version(timeout=check_timeout)
+  File "/home/airflow/.local/lib/python3.8/site-packages/kafka3/client_async.py", line 900, in check_version
+    raise Errors.NoBrokersAvailable()
+kafka3.errors.NoBrokersAvailable: NoBrokersAvailable
+[2024-04-01T12:51:03.662+0000] {taskinstance.py:1149} INFO - Marking task as FAILED. dag_id=send_msg_to_kafka, task_id=send_msg_to_kafka, execution_date=20240401T124033, start_date=20240401T125103, end_date=20240401T125103
+[2024-04-01T12:51:03.669+0000] {standard_task_runner.py:107} ERROR - Failed to execute job 39 for task send_msg_to_kafka (NoBrokersAvailable; 134)
+[2024-04-01T12:51:03.707+0000] {local_task_job_runner.py:234} INFO - Task exited with return code 1
+[2024-04-01T12:51:03.715+0000] {taskinstance.py:3312} INFO - 0 downstream tasks scheduled from follow-on schedule check

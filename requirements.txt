@@ -1,0 +1,3 @@
+pytest==7.4.2
+requests==2.31.0
+kafka-python3==3.0.0
