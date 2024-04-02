@@ -3,7 +3,6 @@ from airflow.operators.python import PythonOperator
 from datetime import datetime
 from kafka3 import KafkaProducer
 
-bootstrap_servers = 'localhost:9092'
 topic = 'howard'
 message = b'Hello, Kafka!'
 
