@@ -97,3 +97,15 @@ task1 >> task2
 ## TO STUDY
 https://github.com/lukeburciu/hpviz/issues/71
 https://stackoverflow.com/questions/59592518/kafka-broker-doesnt-find-cluster-id-and-creates-new-one-after-docker-restart
+
+
+## Thinking
+snowflake 
+做predict , 利用historical data * ML 做出下一季的銷售報告 .. bla bla bla
+Output 除了視覺化，能否依據業務單位的不同給予不同的Token, 來存取api returned data
+
+
+bhli jhqi itua otcg
+
+## 如果config 或是 requirement 有變動 需要用這個指令重新rebuild 一次 
+docker-compose up --build

@@ -37,7 +37,10 @@ group_id = Variable.get("group_id")
 
 default_args = {
     'owner': 'airflow',
-    'start_date': datetime(2024, 4, 2)
+    'start_date': datetime(2024, 4, 2),
+    'email': ['a1752815@gmail.com'],
+    'email_on_failure': True,
+    'email_on_success': True
 }
 
 
