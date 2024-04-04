@@ -127,8 +127,21 @@ def check_db_exist():
     return "Table user_info already exists"
 
 
+def create_connection():
+    try:
+        conn = psycopg2.connect(
+            dbname=db_name,
+            user=db_user,
+            password=db_password,
+            host=db_hostname,
+            port=db_port
+        )
+        return conn
+    except Exception as e:
+        print(f"Error connecting to the database: {e}")
+        return None
 
-## Inner call used only
+
 def consume_msg_from_kafka():
 
     topic = "user_created"
@@ -137,66 +150,43 @@ def consume_msg_from_kafka():
                              group_id=group_id,
                              bootstrap_servers=broker,
                              auto_offset_reset='earliest',
-                             enable_auto_commit=True
+                             enable_auto_commit=True,
+                             consumer_timeout_ms=1000
                              )
-
-    consumed_msgs = []
-    max_msgs_to_consume = 30
+    ## create a db connection
+    conn = create_connection()
     try:
         for message in consumer:
-            if message is None:
-                continue
-            if message.value is None:
-                if message.error.code == kafka_errors._PARTITION_EOF:
-                    # End of partition, continue polling
-                    continue
-                else:
-                    raise kafka_errors(message.error())
-            else:
-                # Process the message
+            if message is not None:
                 print(f"Received message: {message.value}")
                 consumed_msg = json.loads(message.value)
-                consumed_msgs.append(consumed_msg)
-                if len(consumed_msgs) >= max_msgs_to_consume:
-                    break
-    except KeyboardInterrupt:
-        sys.stderr.write('%% Aborted by user\n')
-
+                consume_and_store_data(consumed_msg, conn)
+            else:
+                print("Received None message. Exiting loop.")
+                break
+    except Exception as e:
+        print(f"Errors! please check {e}")
     finally:
         consumer.close()
-    return consumed_msgs
+        if conn:
+            conn.close()
 
-##TODO : 應該把 consume_and_stor_data 做成func 在consume_msg_from_kafka 內呼叫，並把在consume_msg_from_kafka 做成task
-
-def consume_and_store_data():
-    conn = psycopg2.connect(
-        dbname=db_name,
-        user=db_user,
-        password=db_password,
-        host=db_hostname,
-        port=db_port
-    )
-    kafka_msg = consume_msg_from_kafka()
-    cursor = conn.cursor()
-    print(f"Kafka message---->: {kafka_msg}")
-
-    for i in range(len(kafka_msg)):
-        # Insert to SQL
+def consume_and_store_data(kafka_msg, conn):
+    try:
+        cursor = conn.cursor()
         cursor.execute(
             "INSERT INTO user_info (id, first_name, last_name, gender, address, postcode, email, username, registered_date, phone, picture) \
              VALUES (DEFAULT, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-            (kafka_msg[i]['first_name'], kafka_msg[i]['last_name'], kafka_msg[i]['gender'], kafka_msg[i]['address'],
-             kafka_msg[i]['postcode'], kafka_msg[i]['email'],
-             kafka_msg[i]['username'], kafka_msg[i]['registered_date'], kafka_msg[i]['phone'], kafka_msg[i]['picture'])
+            (kafka_msg['first_name'], kafka_msg['last_name'], kafka_msg['gender'], kafka_msg['address'],
+             kafka_msg['postcode'], kafka_msg['email'],
+             kafka_msg['username'], kafka_msg['registered_date'], kafka_msg['phone'], kafka_msg['picture'])
         )
-
-        # submit & close
         conn.commit()
+    except Exception as e:
+        print(f"Error storing data: {e}")
+    finally:
+        cursor.close()
 
-    cursor.close()
-    conn.close()
-
-    return "Success"
 
 
 with DAG('user_automation',
@@ -220,11 +210,11 @@ with DAG('user_automation',
         python_callable=check_db_exist
     )
 
-    consume_and_store_data = PythonOperator(
-        task_id='consume_and_store_data',
-        python_callable=consume_and_store_data
+    consume_msg_from_kafka = PythonOperator(
+        task_id='consume_msg_from_kafka',
+        python_callable=consume_msg_from_kafka
     )
 
 
 
-streaming_task >> check_table_exists >> consume_and_store_data
+streaming_task >> check_table_exists >> consume_msg_from_kafka
