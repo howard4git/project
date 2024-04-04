@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 import json
@@ -10,7 +10,7 @@ import logging
 import psycopg2
 from airflow.models import Variable
 import sys
-
+from utils.DiscordNotifier import DiscordNotifier
 
 ##DB host should put the db container name instead of localhost !!! ##
 ## Setting Enviroment Variable ##
@@ -38,9 +38,11 @@ group_id = Variable.get("group_id")
 default_args = {
     'owner': 'airflow',
     'start_date': datetime(2024, 4, 2),
-    'email': ['a1752815@gmail.com'],
-    'email_on_failure': True,
-    'email_on_success': True
+    # 'email': ['a1752815@gmail.com'],
+    # 'email_on_failure': True,
+    # 'email_on_success': True
+    'on_failure_callback': DiscordNotifier(msg=" ⚠️️Task Run Failed!⚠️"),
+    'on_success_callback': DiscordNotifier(msg=" ✅️Task Run Success!✅")
 }
 
 
@@ -75,7 +77,7 @@ def streaming_data():
     batch_size = 0
 
     while True:
-        if batch_size == 100:
+        if batch_size == 10:
             break
         try:
             res = get_data()
@@ -139,7 +141,7 @@ def consume_msg_from_kafka():
                              )
 
     consumed_msgs = []
-    max_msgs_to_consume = 300
+    max_msgs_to_consume = 30
     try:
         for message in consumer:
             if message is None:
@@ -164,6 +166,7 @@ def consume_msg_from_kafka():
         consumer.close()
     return consumed_msgs
 
+##TODO : 應該把 consume_and_stor_data 做成func 在consume_msg_from_kafka 內呼叫，並把在consume_msg_from_kafka 做成task
 
 def consume_and_store_data():
     conn = psycopg2.connect(

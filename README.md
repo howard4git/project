@@ -108,4 +108,4 @@ Output 除了視覺化，能否依據業務單位的不同給予不同的Token, 
 bhli jhqi itua otcg
 
 ## 如果config 或是 requirement 有變動 需要用這個指令重新rebuild 一次 
-docker-compose up --build
+docker compose up --build
