@@ -1,6 +1,7 @@
 # Project
-A small project for ETL pipeline and implement some notify functions.
-
+This is a small project for demonstrate an ETL pipeline and implement some notify functions.
+"Dockerfile" contains some customize instruction for using my customize airflow.cfg and run pip install requirements.
+airflow_BACKUP.cfg is used for back up which is the origin airflow.cfg file.
 
 # Functions
 1. Send a simple request to api and through ETL pipeline and store to database.
@@ -18,3 +19,4 @@ A small project for ETL pipeline and implement some notify functions.
 3. wait for it
 4. docker compose up -d
 5. Go web and type in your url: localhost:8080/home
+6. You can run user_automation DAG, expected result that will handle the data which come from api and parse to kafka broker and consumed & stored by postgres client.
