@@ -34,7 +34,7 @@ broker = Variable.get("broker")
 group_id = Variable.get("group_id")
 
 
-
+## you may change the email to yours, if you want to change the sender's info, you may go config/airflow.cfg replace [smpt] related information.
 default_args = {
     'owner': 'airflow',
     'start_date': datetime(2024, 4, 2),
