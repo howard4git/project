@@ -17,6 +17,6 @@ airflow_BACKUP.cfg is used for back up which is the origin airflow.cfg file.
 1. cd your folder where you clone this project 
 2. Open the terminal and type in docker compose up airflow-init
 3. wait for it
-4. docker compose up -d
+4. docker compose up -d (expected airflow init down it's ok, but services kafka, zookeeper, airflow-webserver, airflow-worker, airflow-scheduler ...etc need to be alive, if not you may restart the service and try it again.)
 5. Go web and type in your url: localhost:8080/home
 6. You can run user_automation DAG, expected result that will handle the data which come from api and parse to kafka broker and consumed & stored by postgres client.
