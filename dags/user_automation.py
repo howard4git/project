@@ -91,14 +91,7 @@ def streaming_data():
         batch_size += 1
 
 def check_db_exist():
-    conn = psycopg2.connect(
-        dbname='postgres',
-        user='airflow',
-        password=db_password,
-        host=db_host,
-        port=db_port
-    )
-
+    conn = create_connection()
     # Create instance
     cursor = conn.cursor()
     # Check if table exists
