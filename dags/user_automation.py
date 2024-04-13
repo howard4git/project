@@ -75,10 +75,9 @@ def format_data(res):
 def streaming_data():
     producer = KafkaProducer(bootstrap_servers=['broker:29092'], max_block_ms=5000)
     batch_size = 0
+    wanted_size = 100
 
-    while True:
-        if batch_size == 10:
-            break
+    while batch_size < wanted_size:
         try:
             res = get_data()
             res = format_data(res)
